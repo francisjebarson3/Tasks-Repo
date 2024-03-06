@@ -1,0 +1,57 @@
+{
+  "name": "user-auth-aws-cognito",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "type": "module",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/user-auth-aws-cognito",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "src/main.js",
+        "tsConfig": "tsconfig.app.json",
+        "assets": ["src/assets","src/utils"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "user-auth-aws-cognito:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "user-auth-aws-cognito:build:development"
+        },
+        "production": {
+          "buildTarget": "user-auth-aws-cognito:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
