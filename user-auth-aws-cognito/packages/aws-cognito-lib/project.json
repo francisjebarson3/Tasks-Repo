@@ -1,0 +1,23 @@
+{
+  "name": "aws-cognito-lib",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/aws-cognito-lib/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/aws-cognito-lib",
+        "main": "packages/aws-cognito-lib/src/index.js",
+        "tsConfig": "packages/aws-cognito-lib/tsconfig.lib.json",
+        "assets": ["packages/aws-cognito-lib/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs aws-cognito-lib {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": []
+}

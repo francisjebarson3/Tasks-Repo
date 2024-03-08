@@ -13,14 +13,15 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@myorg/my-awesome-lib": ["packages/aws-cognito-lib/src/index.js"]
+    },
     "esModuleInterop": true,
     "allowJs": true
   },
   "files": [],
   "include": [],
   "references": [
-    
     {
       "path": "./tsconfig.app.json"
     },

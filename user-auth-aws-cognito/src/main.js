@@ -1,7 +1,8 @@
 const {router} = require('./routes/user.routes');
 const {express} = require('./utils/expressUtils');
-
+const dotenv = require( 'dotenv');
 const app = express();
+dotenv.config();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

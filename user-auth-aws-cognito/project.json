@@ -16,7 +16,7 @@
         "bundle": false,
         "main": "src/main.js",
         "tsConfig": "tsconfig.app.json",
-        "assets": ["src/assets","src/utils"],
+        "assets": ["src/assets", "src/utils"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -50,6 +50,14 @@
         "production": {
           "buildTarget": "user-auth-aws-cognito:build:production"
         }
+      }
+    },
+    "local-registry": {
+      "executor": "@nx/js:verdaccio",
+      "options": {
+        "port": 4873,
+        "config": ".verdaccio/config.yml",
+        "storage": "tmp/local-registry/storage"
       }
     }
   },

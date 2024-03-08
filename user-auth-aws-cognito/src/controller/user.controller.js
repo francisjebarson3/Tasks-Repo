@@ -1,11 +1,9 @@
 
 
-const dotenv = require( 'dotenv');
 const {sendResponse, validateInput}= require('../utils/validate');
-const {verifier,cognito}= require('../utils/awsUtils');
-dotenv.config();
-const CLIENT_ID =  process.env.CLIENT_ID;
-const USER_POOL_ID = process.env.USER_POOL_ID;
+import   {userLogin,verifyToken,userSignUp}  from  '@myorg/my-awesome-lib';
+
+
 
 async function login(req,res) {
     try {
@@ -14,17 +12,7 @@ async function login(req,res) {
              return sendResponse(400, { message: 'Invalid input' })
  
          const { email, password } = req.body;
-         const params = {
-             AuthFlow: "ADMIN_NO_SRP_AUTH",
-             UserPoolId: USER_POOL_ID,
-             ClientId: CLIENT_ID,
-             AuthParameters: {
-                 USERNAME: email,
-                 PASSWORD: password
-             }
-             
-         }
-         const response = await cognito.adminInitiateAuth(params).promise();
+         const response=await userLogin(email, password);
          return sendResponse(200, { message: 'Success', token: response.AuthenticationResult.IdToken })
      }
      catch (error) {
@@ -36,18 +24,12 @@ async function login(req,res) {
  async function verifyBearerToken(req, res) {
      const token=req.headers['authorization'].replace('Bearer ','');
      console.log(`token::: ${token}`);
-     try {
-         const payload = await verifier.verify(
-             token // the JWT as string
-         );
-         console.log("Token is valid. Payload:", payload);
-         return sendResponse(200, { payload: payload ,message:"Token is valid. Payload" });
-       } catch {
-         console.log("Token not valid!");
+     const resp= await verifyToken(token);
+     if(resp){
+         return sendResponse(200, { payload: resp ,message:"Token is valid. Payload" });
+     }else{
          return sendResponse(400, { message:"Token not valid" });
-       }
- 
-    
+     }
  }
  
  async function signup(req, res) {
@@ -57,30 +39,7 @@ async function login(req,res) {
              return sendResponse(400, { message: 'Invalid input' })
  
          const { email, password } = req.body;
-         const params = {
-             UserPoolId: USER_POOL_ID,
-             Username: email.split("@")[0],
-             UserAttributes: [
-                 {
-                     Name: 'email',
-                     Value: email
-                 },
-                 {
-                     Name: 'email_verified',
-                     Value: 'true'
-                 }],
-             MessageAction: 'SUPPRESS'
-         }
-         const response = await cognito.adminCreateUser(params).promise();
-         if (response.User) {
-             const paramsForSetPass = {
-                 Password: password,
-                 UserPoolId: USER_POOL_ID,
-                 Username: email,
-                 Permanent: true
-             };
-             await cognito.adminSetUserPassword(paramsForSetPass).promise()
-         }
+         await userSignUp( email, password );
          return sendResponse(200, { message: 'User registration successful' })
      }
      catch (error) {
@@ -90,5 +49,5 @@ async function login(req,res) {
  }
 
  module.exports={
-    login, verifyBearerToken, signup
+    login ,verifyBearerToken, signup
  }
